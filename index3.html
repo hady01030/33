@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Labs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background:linear-gradient(40deg, orange , rgb(1, 175, 1));
+            transition: background-color 0.3s;
+             text-align: center;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #ff4423;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .verify-btn {
+            background-color: #008CBA;
+        }
+        .dark-mode-btn {
+            background-color: #555;
+        }
+        .result {
+            margin-top: 10px;
+            color: #28a745;
+        }
+        .shopping-list {
+            list-style: none;
+            padding: 0;
+        }
+        .shopping-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        .shopping-list li button {
+            background-color: #ff4444;
+            padding: 2px 8px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #444;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            color: #fff;
+            width: 300px;
+            text-align: center;
+        }
+        .popup.active {
+            display: block;
+        }
+        .popup input {
+            width: 80%;
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+        .popup button {
+            background-color: #ffd700;
+            color: #333;
+            padding: 8px 16px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript Labs</h1>
+
+        <!-- User Profile Generator -->
+        <div class="section">
+            <h2>User Profile Generator</h2>
+            <button onclick="openPopup()">Generate Profile</button>
+            <div id="profileResult"></div>
+        </div>
+
+        <!-- Shopping Cart Calculator -->
+        <div class="section">
+            <h2>Shopping Cart Calculator</h2>
+            <button onclick="calculateTotal()">Calculate Total</button>
+            <div id="cartResult"></div>
+        </div>
+
+        <!-- Age Verification -->
+        <div class="section">
+            <h2>Age Verification</h2>
+            <input type="number" id="ageInputVerify" placeholder="Enter your age">
+            <button class="verify-btn" onclick="verifyAge()">Verify</button>
+            <div id="ageResult"></div>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="section">
+            <h2>Dark Mode</h2>
+            <button class="dark-mode-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+
+        <!-- Shopping List -->
+        <div class="section">
+            <h2>Shopping List</h2>
+            <input type="text" id="itemInput" placeholder="Add an item...">
+            <button onclick="addItem()">Add</button>
+            <ul id="shoppingList" class="shopping-list"></ul>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <h3>Enter Your Profile</h3>
+        <input type="text" id="popupNameInput" placeholder="Enter your name">
+        <input type="number" id="popupAgeInput" placeholder="Enter your age">
+        <button onclick="generateProfileFromPopup()">Generate</button>
+    </div>
+
+    <script>
+        // Popup Control
+        function openPopup() {
+            document.getElementById('popup').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+            // Clear previous input values
+            document.getElementById('popupNameInput').value = '';
+            document.getElementById('popupAgeInput').value = '';
+        }
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // User Profile Generator from Popup
+        function generateProfileFromPopup() {
+            const name = document.getElementById('popupNameInput').value.trim();
+            const age = document.getElementById('popupAgeInput').value.trim();
+
+            if (name && age) {
+                document.getElementById('profileResult').innerHTML = `
+                    ${name}
+                    <br>Age: ${age}
+                `;
+                closePopup();
+            } else {
+                alert('Please enter both name and age!');
+            }
+        }
+
+        // Shopping Cart Calculator
+        function calculateTotal() {
+            const subtotal = 2397.00;
+            const taxRate = 0.08; // 8% tax
+            const tax = subtotal * taxRate;
+            const total = subtotal + tax;
+            document.getElementById('cartResult').innerHTML = `
+                Subtotal: $${subtotal.toFixed(2)}
+                <br>Tax (${(taxRate * 100).toFixed(0)}%): $${tax.toFixed(2)}
+                <br>Total: $${total.toFixed(2)}
+            `;
+        }
+
+        // Age Verification
+        function verifyAge() {
+            const age = document.getElementById('ageInputVerify').value;
+            const resultDiv = document.getElementById('ageResult');
+            if (age >= 21) {
+                resultDiv.innerHTML = `${age} granted<br>Access granted<br>Welcome to our service!`;
+                resultDiv.style.color = '#28a745';
+            } else {
+                resultDiv.innerHTML = `${age} denied<br>Access denied<br>You must be 21 or older!`;
+                resultDiv.style.color = '#dc3545';
+            }
+        }
+
+        // Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Shopping List
+        let items = [];
+        function addItem() {
+            const itemInput = document.getElementById('itemInput').value;
+            if (itemInput) {
+                items.push(itemInput);
+                document.getElementById('itemInput').value = '';
+                renderList();
+            }
+        }
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderList();
+        }
+        function renderList() {
+            const list = document.getElementById('shoppingList');
+            list.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${item} <button onclick="removeItem(${index})">X</button>`;
+                list.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
